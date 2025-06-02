@@ -6,12 +6,12 @@ from geometry_msgs.msg import Twist
 # Konfiguracja PWM z RC
 PWM_NEUTRAL = 1500
 PWM_RANGE = 250          # realny zakres wokol neutralnego 1500
-DEADBAND_SPEED = 10      # martwa strefa dla jazdy
-DEADBAND_STEER = 10      # martwa strefa dla skrotu
+DEADBAND_SPEED = 50      # martwa strefa dla jazdy
+DEADBAND_STEER = 50      # martwa strefa dla skrotu
 
 # Maksymalne wartosci predkosci robota
 MAX_LINEAR = 1.0         # [m/s]
-MAX_ANGULAR = 1.0        # [rad/s]
+MAX_ANGULAR = 3.0        # [rad/s]
 
 # Failsafe: zatrzymanie po X sekundach bez sygnalu
 FAILSAFE_TIMEOUT = 3.0   # [s]
