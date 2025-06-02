@@ -1,0 +1,4 @@
+<launch>
+    <node name="rc_channels_to_cmd_vel" pkg="rc_control" type="rc_channels_to_cmd_vel.py" output="screen" />
+</launch>
+

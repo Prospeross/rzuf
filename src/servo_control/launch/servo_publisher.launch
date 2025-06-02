@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="servo_control" type="servo_angle_publisher.py" name="servo_angle_publisher" output="screen">
+        <param name="servo1_angle" value="90" />
+        <param name="servo2_angle" value="55" />
+    </node>
+</launch>

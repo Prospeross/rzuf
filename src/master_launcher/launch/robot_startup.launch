@@ -1,0 +1,12 @@
+<launch>
+    <!-- ROSserial, na pierwszym od monitory, po lewej -->
+    <node name="arduino" pkg="rosserial_python" type="serial_node.py" output="screen">
+        <param name="port" value="/dev/ttyUSB0" />
+        <param name="baud" value="57600" />
+    </node>
+
+    <!-- Serva -->
+    <include file="$(find servo_control)/launch/servo_publisher.launch" />  
+    <!-- RC -->
+    <include file="$(find rc_control)/launch/rc_control.launch" />
+</launch>
