@@ -1,0 +1,11 @@
+<launch>
+  <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" output="screen">
+    <param name="marker_size" value="0.102" /> <!-- 10.2 cm -->
+    <param name="max_new_marker_error" value="0.08" />
+    <param name="max_track_error" value="0.2" />
+    <param name="output_frame" value="camera" />
+    
+    <remap from="image" to="/usb_cam/image_raw" />
+    <remap from="camera_info" to="/usb_cam/camera_info" />
+  </node>
+</launch>
