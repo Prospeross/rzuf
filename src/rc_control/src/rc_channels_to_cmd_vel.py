@@ -10,8 +10,8 @@ DEADBAND_SPEED = 50      # martwa strefa dla jazdy
 DEADBAND_STEER = 50      # martwa strefa dla skrotu
 
 # Maksymalne wartosci predkosci robota
-MAX_LINEAR = 1.0         # [m/s]
-MAX_ANGULAR = 3.0        # [rad/s]
+MAX_LINEAR = 0.4         # [m/s]
+MAX_ANGULAR = 1.5        # [rad/s]
 
 # Failsafe: zatrzymanie po X sekundach bez sygnalu
 FAILSAFE_TIMEOUT = 3.0   # [s]
@@ -19,11 +19,14 @@ FAILSAFE_TIMEOUT = 3.0   # [s]
 last_msg_time = None
 received_once = False  # czy kiedykolwiek odebrano dane
 
+
+# Przeliczanie danych PWM na przeskalowane wartosci do wiadomosc twist
 def pwm_to_cmd(pwm, max_val, deadband):
     delta = pwm - PWM_NEUTRAL
     if abs(delta) < deadband:
         return 0.0
     return max(min(delta / float(PWM_RANGE), 1.0), -1.0) * max_val
+
 
 def rc_callback(msg):
     global last_msg_time, received_once
@@ -43,6 +46,8 @@ def rc_callback(msg):
     last_msg_time = rospy.Time.now()
     received_once = True
 
+
+#licznik do failsafa
 def failsafe_timer(event):
     if not received_once or last_msg_time is None:
         return
@@ -53,9 +58,15 @@ def failsafe_timer(event):
         stop_msg = Twist()  # same zera
         pub.publish(stop_msg)
 
+
+
 if __name__ == "__main__":
+
+    # Uruchomienie noda
     rospy.init_node("rc_channels_to_cmd_vel")
+    # Publikacja wiadomosc twist do cmd_vel
     pub = rospy.Publisher("/hoverboard_velocity_controller/cmd_vel", Twist, queue_size=1)
+    # Sukbskyrbowanie do topicu rc_channels
     sub = rospy.Subscriber("/rc_channels", Int16MultiArray, rc_callback)
 
     # Co 0.1 s sprawdzamy, czy RC dziala

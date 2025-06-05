@@ -1,19 +1,23 @@
-<launch>
-  <!-- Parametry zachowania robota wzgledem znacznika AR -->
-  <param name="MarkerID" value="5" />
+<launch>  
+  <!-- Uruchomienie noda z sledzeniem znacznika -->
+  <node name="ar_follower" 
+        pkg="ar_tag_tracker" 
+        type="ar_tag_tracker.py" 
+        output="screen" 
+        respawn="false">
+  <!-- Parametry robota wzgledem znacznika AR -->
+  <param name="MarkerID" value="0" />
   <param name="rate" value="10" />
-  <param name="max_angular_speed" value="2.0" />
-  <param name="min_angular_speed" value="0.5" />
-  <param name="max_z" value="20.0" />
+  <param name="max_angular_speed" value="1.5" />
+  <param name="min_angular_speed" value="0.2" />
+  <param name="max_z" value="5.0" />
   <param name="goal_z" value="0.5" />
   <param name="z_threshold" value="0.05" />
-  <param name="x_threshold" value="0.05" />
-  <param name="z_scale" value="0.5" />
-  <param name="x_scale" value="1.0" />
-  <param name="max_linear_speed" value="1.0" />
-  <param name="min_linear_speed" value="0.1" />
-
-  <!-- Uruchomienie noda z sledzeniem znacznika -->
-  <node name="ar_follower" pkg="ar_tag_tracker" type="ar_tag_tracker.py" output="screen" respawn="false" />
-
+  <param name="x_threshold" value="0.03" />
+  <param name="z_scale" value="1.2" />
+  <param name="x_scale" value="2.5" />
+  <param name="max_linear_speed" value="0.4" />
+  <param name="min_linear_speed" value="0.05" />
+  
+  </node>
 </launch>

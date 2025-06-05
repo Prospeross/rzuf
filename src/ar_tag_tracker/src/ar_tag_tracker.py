@@ -9,74 +9,73 @@ class ARFollower():
     def __init__(self):
         rospy.init_node("ar_follower")
                         
-        # Set the shutdown function (stop the robot)
+        # Ustawienie funkcji wylaczenia robota (zatrzymania)
         rospy.on_shutdown(self.shutdown)
 
-        # What Marker ID should we look at?
+        # Jaki marker ma byc podazany?
         self.MarkerID = rospy.get_param("~MarkerID", 0)
         
-        # How often should we update the robot's motion?
+        # Jak czesto updatowac ruch robota?
         self.rate = rospy.get_param("~rate", 10)
         r = rospy.Rate(self.rate) 
         
-        # The maximum rotation speed in radians per second
-        self.max_angular_speed = rospy.get_param("~max_angular_speed", 2.0)
+        # Maksymalna predkosc skrecania [rad/s]
+        self.max_angular_speed = rospy.get_param("~max_angular_speed", 1.5)
         
-        # The minimum rotation speed in radians per second
-        self.min_angular_speed = rospy.get_param("~min_angular_speed", 0.5)
+        # Minimalna predkosc skrecania [rad/s]
+        self.min_angular_speed = rospy.get_param("~min_angular_speed", 0.2)
         
-        # The maximum distance a target can be from the robot for us to track
-        self.max_z = rospy.get_param("~max_z", 20.0)
+        # Maksymalny dystans znacznika zeby robota za nim podazal
+        self.max_z = rospy.get_param("~max_z", 5.0)
         
-        # The goal distance (in meters) to keep between the robot and the marker
+        # Docelowa odleglosc miedzy robotami [w metrach]
         self.goal_z = rospy.get_param("~goal_z", 0.5)
         
-        # How far away from the goal distance (in meters) before the robot reacts
+        # Wartosc progu reakcji osi z (roznicy miedzy odlegloscia robotow) [w metrach]
         self.z_threshold = rospy.get_param("~z_threshold", 0.05)
         
-        # How far away from being centered (x displacement) on the AR marker
-        # before the robot reacts (units are meters)
+        # Wartosc progu reakcja na przesuniecie znacznika na boki w osi x [w metrach]
         self.x_threshold = rospy.get_param("~x_threshold", 0.05)
         
-        # How much do we weight the goal distance (z) when making a movement
+        # Skalowanie wartosci odpowiedzi na zmiane (os z)
         self.z_scale = rospy.get_param("~z_scale", 0.5)
 
-        # How much do we weight x-displacement when making a movement        
+        # Skalowanie wartosci odpowiedzi na zmiane (os x)     
         self.x_scale = rospy.get_param("~x_scale", 1.0)
         
-        # The max linear speed in meters per second
+        # Maksymalna predkosc liniowa [m/s]
         self.max_linear_speed = rospy.get_param("~max_linear_speed", 1)
         
-        # The minimum linear speed in meters per second
+        # Minimalna predkosc liniowa [m/s]
         self.min_linear_speed = rospy.get_param("~min_linear_speed", 0.1)
 
-        # Publisher to control the robot's movement
+        # Publikowanie na odpowiedni topic (zalezne od hoverboard_driver)
         self.cmd_vel_pub = rospy.Publisher('/hoverboard_velocity_controller/cmd_vel', Twist, queue_size=5)
         
-        # Intialize the movement command
+        # Uruchomienie wiadomosci
         self.move_cmd = Twist()
         
-        # Set flag to indicate when the AR marker is visible
+        # Flaga, czy znacznik jest widziany
         self.target_visible = False
 
-	    # Set last known speed command 
+	    # Ostatnia znana predkosc
         self.last_speed = 0
         
-        # Wait for the ar_pose_marker topic to become available
-        rospy.loginfo("Waiting for ar_pose_marker topic...")
+        # Oczkeiwanie na topic ar_pose_marker by wyslal dane
+        rospy.loginfo("Oczekiwanie topic ar_pose_marker...")
         rospy.wait_for_message('ar_pose_marker', AlvarMarkers)
         
-        # Subscribe to the ar_pose_marker topic to get the image width and height
+        # Subskrybcja do topicu ar_pose_marker 
         rospy.Subscriber('ar_pose_marker', AlvarMarkers, self.set_cmd_vel)
         
-        rospy.loginfo("Marker messages detected. Starting follower...")
+        rospy.loginfo("Marker odnaleziony. Zaczynam podazac...")
         
-        # Begin the cmd_vel publishing loop
+        # Petla publikacji na cmd_vel
         while not rospy.is_shutdown():
-            # Send the Twist command to the robot
+            # Wyslanie wiadomosci twist do cmd_vel
             self.cmd_vel_pub.publish(self.move_cmd)
             
-            # Sleep for 1/self.rate seconds
+            # Zaczekaj 1/self.rate [s]
             r.sleep()
 
     def set_cmd_vel(self, msg):
@@ -84,36 +83,36 @@ class ARFollower():
         marker = next((m for m in msg.markers if m.id == self.MarkerID), None)
 
         if marker is None:
-            # Znacznik nie zosta� znaleziony
+            # Znacznik nie zostal znaleziony
             self.move_cmd.linear.x /= 1.5
             self.move_cmd.angular.z /= 1.5
 
             if self.target_visible:
-                rospy.loginfo("FOLLOWER LOST Target!")
+                rospy.loginfo("Zgubiono marker. Konczenie podazania")
             self.target_visible = False
             return
 
-        # Znacznik zosta� znaleziony
+        # Znacznik zostal znaleziony
         if not self.target_visible:
-            rospy.loginfo("FOLLOWER is Tracking Target!")
+            rospy.loginfo("Znaleziono marker. Rozpoczynanie podazania")
         self.target_visible = True
                 
-        # Get the displacement of the marker relative to the base
+        # Uzyskanie przesuniecie w osi x znacznika wzgledem pozycji kamery [m]
         target_offset_x = marker.pose.pose.position.x
         
-        # Get the distance of the marker from the base
+        # Uzyskanie odleglosci w osi z znacznika wzgledem pozycji kamery [m]
         target_offset_z = marker.pose.pose.position.z
         
-        # Rotate the robot only if the displacement of the target exceeds the threshold
+        # Obrot robota tylko wtedy, gdy przemieszczenie celu przekroczy prog
         if abs(target_offset_x) > self.x_threshold:
-            # Set the rotation speed proportional to the displacement of the target
+            # Ustaw predkosc skrecania proporcjonalnie do przemieszczenia celu
             speed = target_offset_x * self.x_scale
             self.move_cmd.angular.z = copysign(max(self.min_angular_speed,
                                         min(self.max_angular_speed, abs(speed))), speed)
         else:
             self.move_cmd.angular.z = 0.0
  
-        # Now get the linear speed
+        # Ustaw predkosc liniowa proporcjonalnie do przemieszczenia celu
         if abs(target_offset_z - self.goal_z) > self.z_threshold:
             speed = (target_offset_z - self.goal_z) * self.z_scale
             if speed < 0:
@@ -125,7 +124,7 @@ class ARFollower():
             self.move_cmd.linear.x = 0.0
 
     def shutdown(self):
-        rospy.loginfo("Stopping the robot...")
+        rospy.loginfo("Zatrzymywanie robota...")
         self.cmd_vel_pub.publish(Twist())
         rospy.sleep(1)     
 
@@ -134,4 +133,4 @@ if __name__ == '__main__':
         ARFollower()
         rospy.spin()
     except rospy.ROSInterruptException:
-        rospy.loginfo("AR follower node terminated.")
+        rospy.loginfo("AR follower node zakonczony.")

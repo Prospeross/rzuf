@@ -1,9 +1,11 @@
 <launch>
+  <!-- Ustawienai zwiazane z markerem [wielkosc w cm] -->
   <arg name="marker_size" default="10" />
   <arg name="max_new_marker_error" default="0.08" />
   <arg name="max_track_error" default="0.2" />
   <arg name="output_frame" default="camera" />
 
+  <!-- Uruchomienie noda z paczki ar_track_alvar -->
   <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" output="screen">
     <param name="marker_size" value="$(arg marker_size)" />
     <param name="max_new_marker_error" value="$(arg max_new_marker_error)" />
@@ -12,7 +14,9 @@
     <param name="publish_tf" value="true" />
     <param name="publish_visual_markers" value="true" />
 
+  <!-- Remap skad wziac dane z kamery -->
     <remap from="camera_image" to="/usb_cam/image_raw" />
     <remap from="camera_info" to="/usb_cam/camera_info" />
+    
   </node>
 </launch>
