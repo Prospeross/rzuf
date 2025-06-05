@@ -1,0 +1,13 @@
+<launch>
+  <!-- Uruchomienie kontrolera hoverboarda -->
+  <include file="$(find hoverboard_controller)/launch/hoverboard.launch" />
+
+  <!-- Uruchomienie kamery USB -->
+  <include file="$(find usb_cam_test)/launch/usb_cam.launch" />
+
+  <!-- Uruchomienie detekcji markerow AR -->
+  <include file="$(find ar_track_alvar)/launch/ar_track_alvar.launch" />
+
+  <!-- Uruchomienie node'a do podozania za markerem -->
+  <include file="$(find ar_tag_tracker)/launch/track_tag.launch" />
+</launch>
