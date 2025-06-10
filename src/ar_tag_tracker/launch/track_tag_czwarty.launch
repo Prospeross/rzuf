@@ -6,7 +6,7 @@
         output="screen" 
         respawn="false">
   <!-- Parametry robota wzgledem znacznika AR -->
-  <param name="MarkerID" value="1" />
+  <param name="MarkerID" value="7" />
   <param name="rate" value="10" />
   <param name="max_angular_speed" value="1.5" />
   <param name="min_angular_speed" value="0.2" />

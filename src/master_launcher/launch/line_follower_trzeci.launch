@@ -8,7 +8,7 @@
   <include file="$(find ar_track_alvar)/launch/ar_track_alvar.launch" />
 
   <!-- Uruchomienie noda do podozania za markerem -->
-  <include file="$(find ar_tag_tracker)/launch/track_tag.launch" />
+  <include file="$(find ar_tag_tracker)/launch/track_tag_trzeci.launch" />
   
   <!-- Uruchomienie kontrolera hoverboarda 
   <include file="$(find hoverboard_controller)/launch/hoverboard.launch" /> -->

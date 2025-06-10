@@ -61,14 +61,14 @@ class ARFollower():
 	    # Ostatnia znana predkosc
         self.last_speed = 0
         
-        # Oczkeiwanie na topic ar_pose_marker by wyslal dane
+        # Oczekiwanie na topic ar_pose_marker by wyslal dane
         rospy.loginfo("Oczekiwanie topic ar_pose_marker...")
         rospy.wait_for_message('ar_pose_marker', AlvarMarkers)
         
         # Subskrybcja do topicu ar_pose_marker 
         rospy.Subscriber('ar_pose_marker', AlvarMarkers, self.set_cmd_vel)
         
-        rospy.loginfo("Marker odnaleziony. Zaczynam podazac...")
+        rospy.loginfo("Poprawne uruchomienie wezlu. Zaczynam szukac markera...")
         
         # Petla publikacji na cmd_vel
         while not rospy.is_shutdown():
@@ -83,7 +83,7 @@ class ARFollower():
         marker = next((m for m in msg.markers if m.id == self.MarkerID), None)
 
         if marker is None:
-            # Znacznik nie zostal znaleziony
+            # Znacznik nie zostal znaleziony, robot powoli sie zatrzymuje
             self.move_cmd.linear.x /= 1.5
             self.move_cmd.angular.z /= 1.5
 
