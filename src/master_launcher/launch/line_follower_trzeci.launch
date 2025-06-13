@@ -2,15 +2,20 @@
 
 
   <!-- Uruchomienie kamery USB -->
-  <include file="$(find usb_cam_test)/launch/usb_cam_lab.launch" />
+    <include file="$(find usb_cam_test)/launch/usb_cam_lab.launch" />
 
   <!-- Uruchomienie detekcji markerow AR -->
-  <include file="$(find ar_track_alvar)/launch/ar_track_alvar.launch" />
+    <include file="$(find ar_track_alvar)/launch/ar_track_alvar.launch" />
 
   <!-- Uruchomienie noda do podozania za markerem -->
-  <include file="$(find ar_tag_tracker)/launch/track_tag_trzeci.launch" />
+    <include file="$(find ar_tag_tracker)/launch/track_tag_trzeci.launch" />
   
-  <!-- Uruchomienie kontrolera hoverboarda 
-  <include file="$(find hoverboard_controller)/launch/hoverboard.launch" /> -->
+    <rosparam file="$(find hoverboard_driver)/config/hardware.yaml" command="load"/>
+    <rosparam file="$(find hoverboard_driver)/config/controllers.yaml" command="load"/>
+    <node name="hoverboard_driver" pkg="hoverboard_driver" type="hoverboard_driver" output="screen"/>
+        <param name="port" type="str" value="/dev/ttyUSB0"/>
+    </node>
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+        args="hoverboard_joint_publisher hoverboard_velocity_controller" />
   
 </launch>

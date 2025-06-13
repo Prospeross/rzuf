@@ -98,7 +98,7 @@ class ARFollower():
         self.target_visible = True
                 
         # Uzyskanie przesuniecie w osi x znacznika wzgledem pozycji kamery [m]
-        target_offset_x = marker.pose.pose.position.x
+        target_offset_x = -marker.pose.pose.position.x
         
         # Uzyskanie odleglosci w osi z znacznika wzgledem pozycji kamery [m]
         target_offset_z = marker.pose.pose.position.z

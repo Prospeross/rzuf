@@ -10,7 +10,8 @@
     <!-- RC -->
     <include file="$(find rc_control)/launch/rc_control.launch" />
 
-    <!-- Uruchomienie kontrolera hoverboarda 
-    <include file="$(find hoverboard_controller)/launch/hoverboard.launch" /> -->
+    <!-- Uruchomienie kontrolera hoverboarda, uzywa tego jego luancha ale jest tak juz wpisane -->
+    <!-- /dev/ttyUSB1, tak samo w configu jest na 1, wiec ma byc podlaczany po arduino-->
+    <include file="$(find hoverboard_driver)/launch/hoverboard.launch" /> 
     
 </launch>
