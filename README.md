@@ -1,16 +1,16 @@
 # Praca Inżynierksa, Projekt RZUF
 ### **R.Z.U.F** - **Roboty Zwarcie Utrzymujące Formację**
 ###### Brak polskich znakow wynika z zdalnego opracowywania projektu przy uzyciu VNC
-![image info](.\Instrukcje\zdj\trzy_jednostki.png)
+![image info](./Instrukcje/zdj/trzy_jednostki.png)
 
 Celem pracy było opracowanie projektu oraz wykonanie grupy robotów mobilnych, wraz z układem sterowania i komunikacji umożliwiającym ich skoordynowany ruch. W ramach realizacji zaprojektowano mobilnego robota kołowego, zdolnego do współpracy, a następnie zbudowano i przetestowano grupę takich jednostek. Do koordynacji ruchu przyjęto konfigurację lider-naśladowca, w której roboty wykorzystują kamerę do identyfikacji pozycji lidera przy pomocy markera AR. Konstrukcja została przystosowana do pracy w zrónicowanym terenie dzięki autorskiemu układowi amortyzacji. Praca obejmuje przeględ literatury, projekt mechaniczny, elektroniczny oraz implementację oprogramowania w systemie ROS, a także badania eksperymentalne potwierdzające zdolnosc zbudowanych robotów do współpracy.
 
-![image info](.\Instrukcje\zdj\badanie_ustawienie.png)
+![image info](./Instrukcje/zdj/badanie_ustawienie.png)
 
 The aim of this thesis was to design and build a group of mobile robots, along with a control and communication system enabling their coordinated movement. As part of the project, a wheeled mobile robot capable of cooperation was designed, followed by the construction and testing of a group of such units. To coordinate their movement, a leader-follower configuration was adopted, in which the robots use a camera to identify the leader's position by means of an AR marker. The mechanical design was adapted for operation in varied terrain through the use of a custom-built suspension system. The work includes a literature review, mechanical and electronic design, implementation of software in the ROS environment, as well as experimental research confirming the ability of the constructed robots to cooperate.
 
 
-![image info](.\Instrukcje\zdj\robot.png)
+![image info](./Instrukcje/zdj/robot.png)
 
 Uklad sterowania oparty zostal o wykorzystanie zhakowanej plyty glownej z deski elektrycznej hoverboarda oraz sterownikow do niej:
 - [https://github.com/hoverboard-robotics/hoverboard-driver]
