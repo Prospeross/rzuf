@@ -101,7 +101,7 @@ Zbudowanie i sorsowanie:
         catkin_make
         source devel/setup.bash
 
-**MOZLIWE**, ze to dzial.
+**MOZLIWE**, ze to dziala.
 
 ---
 Po poprawnym skopiowaniu wszyskitch paczek, nalezy wykonac komende instalujaca wszystkie zalezne biblioteki, przy uzyciu komendy:
