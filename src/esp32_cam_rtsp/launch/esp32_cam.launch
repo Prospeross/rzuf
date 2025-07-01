@@ -1,0 +1,12 @@
+<launch>
+  <arg name="url" default="rtsp://192.168.1.20:8554/mjpeg/1"/>
+
+  <include file="$(find video_stream_opencv)/launch/camera.launch">
+    <arg name="camera_name"           value="esp32_cam"/>
+    <arg name="video_stream_provider" value="$(arg url)"/>
+    <arg name="fps"                   value="30"/>
+    <arg name="frame_id"              value="esp32_cam_frame"/>
+    <arg name="flip_horizontal"       value="false"/>
+    <arg name="flip_vertical"         value="false"/>
+  </include>
+</launch>

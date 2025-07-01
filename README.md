@@ -1,80 +1,127 @@
-## Projekt RZUF, na inzynierke
-R.Z.U.F
-Roboty Zwarcie Utrzymujące Formację
+# Praca Inżynierksa, Projekt RZUF
+### **R.Z.U.F** - **Roboty Zwarcie Utrzymujące Formację**
+###### Brak polskich znakow wynika z zdalnego opracowywania projektu przy uzyciu VNC
+![image info](.\Instrukcje\zdj\trzy_jednostki.png)
 
-Jeszcze WIP, zostało dodanie opisówm, poprawki oraz ustawienie pidow
+Celem pracy było opracowanie projektu oraz wykonanie grupy robotów mobilnych, wraz z układem sterowania i komunikacji umożliwiającym ich skoordynowany ruch. W ramach realizacji zaprojektowano mobilnego robota kołowego, zdolnego do współpracy, a następnie zbudowano i przetestowano grupę takich jednostek. Do koordynacji ruchu przyjęto konfigurację lider-naśladowca, w której roboty wykorzystują kamerę do identyfikacji pozycji lidera przy pomocy markera AR. Konstrukcja została przystosowana do pracy w zrónicowanym terenie dzięki autorskiemu układowi amortyzacji. Praca obejmuje przeględ literatury, projekt mechaniczny, elektroniczny oraz implementację oprogramowania w systemie ROS, a także badania eksperymentalne potwierdzające zdolnosc zbudowanych robotów do współpracy.
 
-Trzeba pamiętać o robieniu: sudo chmod 666 /dev/(rosserial oraz hoverboard)
+![image info](.\Instrukcje\zdj\badanie_ustawienie.png)
 
-jakos nie dziala wprost git clone <to repo>
-Kopiowanie:
-na kompie z ubuntu 20.04 oraz rosem noetic, z sorsowac rosa
-tam gdzie pasuje zrobic workspaca
+The aim of this thesis was to design and build a group of mobile robots, along with a control and communication system enabling their coordinated movement. As part of the project, a wheeled mobile robot capable of cooperation was designed, followed by the construction and testing of a group of such units. To coordinate their movement, a leader-follower configuration was adopted, in which the robots use a camera to identify the leader's position by means of an AR marker. The mechanical design was adapted for operation in varied terrain through the use of a custom-built suspension system. The work includes a literature review, mechanical and electronic design, implementation of software in the ROS environment, as well as experimental research confirming the ability of the constructed robots to cooperate.
+
+
+![image info](.\Instrukcje\zdj\robot.png)
+
+Uklad sterowania oparty zostal o wykorzystanie zhakowanej plyty glownej z deski elektrycznej hoverboarda oraz sterownikow do niej:
+- [https://github.com/hoverboard-robotics/hoverboard-driver]
+- [https://github.com/EFeru/hoverboard-firmware-hack-FOC]
+
+![image info](./Instrukcje/zdj/mainboard_pinout.png)
+
+Schemat ukladu podlaczenia:
+
+![image info](./Instrukcje/zdj/Pelen_schemat.png)
+
+Architektura ROS projektu:
+
+![image info](./Instrukcje/zdj/Pelen_diagram_lep_ssh.png)
+
+
+---
+### Potrzebna instalcja ROS
+Zainstalowany system operacyjny to Ubuntu 20.04 ze wzgledu na wykorzystanie ROS Noetic. Na kazdym z uzytych komputerow zostala zainstalowana pelna wersja ubuntu oraz zgodnie z instrukcja [https://wiki.ros.org/noetic/Installation/Ubuntu] pelna wersja ROSa (ros-noetic-desktop-full)
+
+Dodatkowy potrzebne zewnetrzne oprogramowanie:
+-       sudo apt install python-is-python3
+-       sudo apt-get install v4l-utils
+Reszta ROSowa powinna zostac zainstalowana po *rosdep install*
+
+---
+
+### Kopiowanie projektu
+Mysla przewodnia tego kopiowania, jest przeniesienie wszystkich paczek istniejacych w orginalnym projekcie rzuf
+
+Pierwszy krok to utworzenie nowego workspace'a
 
         mkdir catkin_ws/src
         cd catkin_ws
         catkin_make
 
-teraz w innym miejscu zrobic sb tymczasowe dir
+Następnie w innym miejscu nalezy zrobic tymczasowe foldery w celu przyszlego przeniesienia odpowiedniego folderu
 
         mkdir ~/rozne/temp
         cd ~/rozne/temp
-        git clone <to repo>
+        git clone https://github.com/Prospeross/rzuf.git
         cd rzuf/src
         rm CMakeList.txt
 
-Zapisac sb patha do tego 
+Zapisac bezwgledna sciezke do tego miejsca, przy uzyciu komendy:
+
         pwd
 
-wrocic do poprawnego workspaca
+Wrocic do poprawnego nowo stworzonego workspaca:
 
         cd ~/droga/do/catkin_ws/src
 
-skopiowac rzuf/src
+Skopiowac tymczasowo utworzone rzuf/src:
 
         cp <co i skad> <gdzie skopiowac>
 
         cp ~/rozne/temp/rzuf/src/* .
-gwiazdka ozancza wszyskto z src
-kropka oznacza ze do aktualnego dira (ja tak zawyczaj robie bo przechodze do catkin_ws/src)
-alternatywa
+
+Gwiazdka ozancza wszyskto z folderu src/
+
+Kropka oznacza ze do aktualnej sciezki (Tak mozna zrobic jesli sie przeszlo do catkin_ws/src)
+
+Alternatywa samego kopiowania:
 
         cp ~/rozne/temp/rzuf/src/* ~/droga/do/catkin_ws/src/
-nw czy / ma byc na koncu (chyba tak)
 
+---
 
-Dla ulatwienia, wlaczanie:
+#### Alternatywa kopiowania projektu
+Nie zostalo to sprawdzone ale potencjalnie mozna w nowo stworzonym workspasie usunac to co powtarza sie na repo, a potem tylko skopiowac w tej lokalicacji
 
-- Odlaczyć wszustko od kompa
-- Wlaczy kompa
-- Poczekac az sie zaladuje ubuntu
---(tego co ma bootloader rozwalony trzeba recznie poprawnie zbootwaoc)
-- Polaczyć sie ssh/shh+VNC/VNC/lub maualnie monitor,klawa, myszka
---(dla VNC, musi byc monitor podpiety lub dummy plug)
---(mozna zrobi sztuczke, podpiszan monitor, laczysz sie, odpalasz wszystko, odpinasz monitor, mozna uzywac)
-- na kazdym jest juz zsorsowany ROS
-- przejsc do catkin_ws(na kompach catkin_ws, tutaj sam rzuf)
--       catkin_make
-- Zsorsowac workspaca
-- odpalic potrzebna ilosc terminali (ja robie 3)
-- kazdy odpalony terminal trzeba budowac i sorsowac (trzeba budowac dla ar_track_msgs)
-- W 1 roscore, w 2 lider/podazajacy, w 3 rostopic sprawdzac
-- zanim wszystko wlaczy w 2 termianlu ustawic uprawnienia dla usb(tam gdzie masterlauncha sie odapal)
-- podlaczyc arduino (zeby bylo na /dev/ttyUSB0 bo tak jest w plikach)
--       sudo chmod 666 /dev/ttyUSB0
-- podlaczyc konwerter hovera
--       sudo chmod 666 /dev/ttyUSB1
-mozna juz wszystko wlaczac
-- 1 terminal:       roscore
-- 2 terminal:       roslaunch master_launcher robot_startup.launch
-- lub dla podazajcych:      roslaunch master_launcher line_follower.launch
-dla kazdego nastpengo odpowiednio jak pisze w master-launcher
-- no i powinno wszystko dziala 
+Utworzenie nowego workspace'a:
 
-Dla samych robot trzeba jeszcze pidy ustawic, wiec nalezy je odpalic jako lidera oraz uzyc 
-        rosrun rqt_reconfigure rqt_reconfigure
+        mkdir catkin_ws/src
+        cd catkin_ws
+        catkin_make
+Usuniecie tego co sie powtarza:
 
-[https://wiki.ros.org/rqt_reconfigure]
+        rm -rf src
+        rm CMakeList.txt
+        rm -f .catkin_workspace
 
-W plikach dla podazajacy jest ustawione, tak jakby podazajacy nie mial arduino, i ma miec tylko konweter usb-uart dla hover oraz kamera to w plikach, jest tam pprostu ze hover jest na /dev/ttyUSB0 a nie na USB1.
-Onacza to ze trzbe tylko dac upraw dla USB0
+Skopiowanie:
+
+        git clone https://github.com/Prospeross/rzuf.git
+Zbudowanie i sorsowanie:
+
+        catkin_make
+        source devel/setup.bash
+
+**MOZLIWE**, ze to dzial.
+
+---
+Po poprawnym skopiowaniu wszyskitch paczek, nalezy wykonac komende instalujaca wszystkie zalezne biblioteki, przy uzyciu komendy:
+
+                rosdep install --from-paths src --ignore-src -r -y
+
+**UWAGA**, sam akurat nie testowalem czy tylko tyle wystarczy, teoretycznie powinno, natomiast w moim przypadku zapomnialem o tej komendzie jak jej najbardziej potrzebowalem.
+
+Podczas przygotowywania robotow do badania, robi doklanie to co opisane wyzej, natomiast z zaleznosci instalowalem recznie, oto zaleznosci ktore musialem doinstalowywac:
+-       sudo apt-get install ros-noetic-rosparam-shortcuts
+-       sudo apt-get install v4l-utils
+-       sudo apt-get install ros-noetic-usb-cam
+-       sudo apt-get install ros-noetic-urg-node
+-       sudo apt-get install ros-noetic-rosserial
+-       sudo apt-get install ros-noetic-rosserial-arduino
+-       sudo apt-get install ros-noetic-video-stream-opencv
+-       sudo apt install python-is-python3
+
+Paczki ar_track_alvar oraz ar_track_alvar_msgs sa lokalnie w projekcie ze wzgledu na problemy jak mialy byc w wspolnym zasobie bibliotek.
+
+Paczka hoverboard_driver jest poprostu lokalna
+
+Po wiecej informacji siegac do folderu **Instrukcje**
