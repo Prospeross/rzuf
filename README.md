@@ -1,4 +1,4 @@
-# Praca Inżynierksa, Projekt RZUF
+# Praca Inżynierska, Projekt RZUF
 ### **R.Z.U.F** - **Roboty Zwarcie Utrzymujące Formację**
 ###### Brak polskich znakow wynika z zdalnego opracowywania projektu przy uzyciu VNC
 ![image info](./Instrukcje/zdj/trzy_jednostki.png)
